@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsNumber, IsString, Min } from "class-validator";
+import { IsBoolean, isBoolean, IsDate, IsNumber, IsString, Min } from "class-validator";
 
 export class CreateProductDto {    
     @IsString({
@@ -14,4 +14,9 @@ export class CreateProductDto {
     @Min(0)
     @Type(() => Number)
     public price:number;
+
+    @IsDate()
+    deletedAt?: Date; // This field is not
+    @IsBoolean()    
+    available?: boolean; // This field is not
 }
