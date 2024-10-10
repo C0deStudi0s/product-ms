@@ -57,7 +57,8 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     return product
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(updateProductDto: UpdateProductDto) {
+    const id = updateProductDto.id;
     await this.findOne(id)
     return this.product.update({
       where: {
@@ -70,10 +71,10 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
 
   async remove(id: number) {
     await this.findOne(id)
-    await this.update(id, {
-      deletedAt: new Date(),
-      available: false
-
+    await this.update({
+      id,
+      available: false,
+      deletedAt: new Date()
     })
     
   }
