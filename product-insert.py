@@ -3,25 +3,11 @@ import random
 from datetime import datetime
 
 # Conectar a la base de datos (crea la DB si no existe)
-conn = sqlite3.connect('prisma/dev.db')
+conn = sqlite3.connect('prisma/dev.db')  # Cambiar al camino de tu base de datos
 cursor = conn.cursor()
 
-# Crear la tabla
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS Product (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    description TEXT,
-    price REAL NOT NULL,
-    stock INTEGER,
-    image TEXT,
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-''')
-
-# Función para generar datos aleatorios
-def random_product():
+# Función para generar datos aleatorios para productos
+def generate_product_data():
     names = [f"Product {i}" for i in range(1, 101)]
     descriptions = ["High quality product", "Affordable price", "Limited edition", None]
     name = random.choice(names)
@@ -29,15 +15,18 @@ def random_product():
     price = round(random.uniform(5.0, 100.0), 2)  # Precio entre 5.00 y 100.00
     stock = random.randint(0, 50)  # Stock entre 0 y 50
     image = f"https://example.com/images/{name.replace(' ', '_').lower()}.jpg"
-    
-    return (name, description, price, stock, image)
 
-# Insertar 100 productos aleatorios
+    # Asigna las fechas actuales para createdAt y updatedAt
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    return (name, description, price, stock, image, now, now)  # Incluye las fechas
+
+# Insertar 100 productos
 for _ in range(100):
-    product_data = random_product()
+    product_data = generate_product_data()
     cursor.execute('''
-    INSERT INTO Product (name, description, price, stock, image)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO Product (name, description, price, stock, image, createdAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
     ''', product_data)
 
 # Guardar cambios y cerrar la conexión
