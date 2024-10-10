@@ -17,6 +17,8 @@ model Product {
   price       Float
   stock       Int?
   image       String?
+  deletedAt   DateTime?
+  available   Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
